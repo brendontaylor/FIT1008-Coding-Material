@@ -33,7 +33,7 @@ class ArraySortedSet(Set[T]):
         """
         Removes an item from the set
         :complexity best: O(logn) Item is at end of array
-        :complexity worst: O(logn + n) Item is at front of array
+        :complexity worst: O(n) Item is at front of array
             n - size of the set
         """
         index = self.__index_of_item(item)
