@@ -14,7 +14,7 @@ class LinkedStack(Stack[T]):
         :complexity: O(1)
         """
         new_node = Node(item)
-        new_node._link = self._top
+        new_node.link = self._top
         self._top = new_node
         self._length += 1
 
@@ -26,8 +26,8 @@ class LinkedStack(Stack[T]):
         if self.is_empty():
             raise Exception('Stack is empty')
 
-        item = self._top._item
-        self._top = self._top._link
+        item = self._top.item
+        self._top = self._top.link
         self._length -= 1
         return item
 
@@ -38,7 +38,7 @@ class LinkedStack(Stack[T]):
         """
         if self.is_empty():
             raise Exception('Stack is empty')
-        return self._top._item
+        return self._top.item
 
     def clear(self) -> None:
         """" Resets the stack to an empty state. """
@@ -57,8 +57,8 @@ class LinkedStack(Stack[T]):
         stack_str = ""
         while i is not None:
             if stack_str == "":
-                stack_str = str(i._item)
+                stack_str = str(i.item)
             else:
-                stack_str = str(i._item) + ", " + stack_str
-            i = i._link
+                stack_str = str(i.item) + ", " + stack_str
+            i = i.link
         return f"<LinkedStack [{stack_str}]>"

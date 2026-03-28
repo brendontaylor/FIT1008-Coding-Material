@@ -8,8 +8,8 @@ class Node(Generic[T]):
     """
 
     def __init__(self, item: T = None):
-        self._item = item
-        self._link: Node[T] | None = None
+        self.item = item
+        self.link: Node[T] | None = None
 
     def __str__(self) -> str:
-        return f"Node({self._item}, {'...' if self._link else 'None'})"
+        return f"Node({self.item}, {'...' if self.link else 'None'})"

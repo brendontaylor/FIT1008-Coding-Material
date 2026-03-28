@@ -13,8 +13,8 @@ class LinkedListIterator:
         if self._current is None:
             raise StopIteration
         else:
-            item = self._current._item
-            self._current = self._current._link
+            item = self._current.item
+            self._current = self._current.link
             return item
 
 class LinkedList(List[T]):
@@ -38,12 +38,12 @@ class LinkedList(List[T]):
         else:
             new_node = Node(item)
             if index == 0:
-                new_node._link = self._head
+                new_node.link = self._head
                 self._head = new_node
             else:
                 previous_node = self.__get_node_at_index(index-1)
-                new_node._link = previous_node._link
-                previous_node._link = new_node
+                new_node.link = previous_node.link
+                previous_node.link = new_node
 
             self._length += 1
 
@@ -55,7 +55,7 @@ class LinkedList(List[T]):
         if self._head is None:
             self._head = new_node
         else:
-            self._rear._link = new_node
+            self._rear.link = new_node
         self._rear = new_node
         self._length += 1
 
@@ -76,11 +76,11 @@ class LinkedList(List[T]):
         if not self.is_empty():
             if index > 0:
                 previous_node = self.__get_node_at_index(index-1)
-                item = previous_node._link._item
-                previous_node._link = previous_node._link._link
+                item = previous_node.link.item
+                previous_node.link = previous_node.link.link
             elif index == 0:
-                item = self._head._item
-                self._head = self._head._link
+                item = self._head.item
+                self._head = self._head.link
                 previous_node = self._head
             else:
                 raise ValueError("Index out of bounds")
@@ -103,8 +103,8 @@ class LinkedList(List[T]):
         """
         current = self._head
         index = 0
-        while current is not None and current._item != item:
-            current = current._link
+        while current is not None and current.item != item:
+            current = current.link
             index += 1
         if current is None:
             raise ValueError('Item is not in list')
@@ -126,7 +126,7 @@ class LinkedList(List[T]):
                 return self._rear
             current = self._head
             for _ in range(index):
-                current = current._link
+                current = current.link
             return current
         else:
             raise IndexError('Out of bounds access in list.')
@@ -136,14 +136,14 @@ class LinkedList(List[T]):
         :complexity: See self.__get_node_at_index().
         """
         node_at_index = self.__get_node_at_index(index)
-        return node_at_index._item
+        return node_at_index.item
 
     def __setitem__(self, index: int, item: T) -> None:
         """ Insert the item at a given position.
         :complexity: See self.__get_node_at_index().
         """
         node_at_index = self.__get_node_at_index(index)
-        node_at_index._item = item
+        node_at_index.item = item
 
     def __iter__(self):
         """ Iterate through the list. """

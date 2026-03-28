@@ -37,12 +37,12 @@ class BSTPreOrderIterator(Generic[K,V]):
         if self._stack.is_empty():
             raise StopIteration
         current = self._stack.pop()
-        if current._right:
-            self._stack.push(current._right)
-        if current._left:
-            self._stack.push(current._left)
+        if current.right:
+            self._stack.push(current.right)
+        if current.left:
+            self._stack.push(current.left)
 
-        return current._key, current._item
+        return current.key, current.item
 
 class BSTInOrderIterator(Generic[K,V]):
     """ In-order iterator for the binary search tree.
@@ -65,15 +65,15 @@ class BSTInOrderIterator(Generic[K,V]):
         """
         while self._current:
             self._stack.push(self._current)
-            self._current = self._current._left
+            self._current = self._current.left
 
         if self._stack.is_empty():
             raise StopIteration
 
         result = self._stack.pop()
-        self._current = result._right
+        self._current = result.right
 
-        return result._key, result._item
+        return result.key, result.item
 
 
 class BSTPostOrderIterator(Generic[K,V]):
@@ -100,13 +100,13 @@ class BSTPostOrderIterator(Generic[K,V]):
                 raise StopIteration
             current, expanded = self._stack.pop()
             if expanded:
-                return current._key, current._item
+                return current.key, current.item
             else:
                 self._stack.push((current, True))
-                if current._right:
-                    self._stack.push((current._right, False))
-                if current._left:
-                    self._stack.push((current._left, False))
+                if current.right:
+                    self._stack.push((current.right, False))
+                if current.left:
+                    self._stack.push((current.left, False))
 
 class BinarySearchTree(AbstractBinarySearchTree[K,V]):
     """ Basic binary search tree. """
@@ -135,17 +135,17 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
         def len_aux(current: BinaryNode | None) -> int:
             if current is None:
                 return 0
-            return 1 + len_aux(current._left) + len_aux(current._right)
+            return 1 + len_aux(current.left) + len_aux(current.right)
 
         def check_bst_invariant(node: BinaryNode | None, l=None, r=None) -> bool:
             if node is None:
                 return True
             if not l is None:
-                if node._key < l: return False
+                if node.key < l: return False
             if not r is None:
-                if node._key > r: return False
-            return (check_bst_invariant(node._left, l, node._key) and
-                    check_bst_invariant(node._right, node._key, r))
+                if node.key > r: return False
+            return (check_bst_invariant(node.left, l, node.key) and
+                    check_bst_invariant(node.right, node.key, r))
 
         if not isinstance(node, (BinaryNode, type(None))):
             raise TypeError(f"Cannot instantiate binary tree with node type: {type(node)}")
@@ -169,7 +169,7 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
         """
         if current is None:
             return None
-        return self.__get_min_node(current._right)
+        return self.__get_min_node(current.right)
 
     def __get_predecessor(self, current: BinaryNode[K, V]) -> BinaryNode[K, V] | None:
         """
@@ -180,7 +180,7 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
         """
         if current is None:
             return None
-        return self.__get_max_node(current._left)
+        return self.__get_max_node(current.left)
 
     def __get_min_node(self, current: BinaryNode[K, V]) -> BinaryNode[K, V] | None:
         """
@@ -188,8 +188,8 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
         """
         if current is None:
             return None
-        while current._left:
-            current = current._left
+        while current.left:
+            current = current.left
         return current
 
     def __get_max_node(self, current: BinaryNode[K, V]) -> BinaryNode[K, V] | None:
@@ -198,13 +198,13 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
         """
         if current is None:
             return None
-        while current._right:
-            current = current._right
+        while current.right:
+            current = current.right
         return current
 
     def is_leaf(self, current: BinaryNode[K, V]) -> bool:
         """ Simple check whether or not the node is a leaf. """
-        return current._left is None and current._right is None
+        return current.left is None and current.right is None
 
     def items(self) -> ArrayR[Tuple[K, V]]:
         array = ArrayR(len(self))
@@ -251,26 +251,26 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
 
             if current is None:  # key not found
                 raise KeyError('Deleting non-existent item')
-            elif key < current._key:
-                current._left = delete_aux(current._left, key)
-            elif key > current._key:
-                current._right = delete_aux(current._right, key)
+            elif key < current.key:
+                current.left = delete_aux(current.left, key)
+            elif key > current.key:
+                current.right = delete_aux(current.right, key)
             else:  # we found our key => do actual deletion
                 if self.is_leaf(current):
                     self._length -= 1
                     return None
-                elif current._left is None:
+                elif current.left is None:
                     self._length -= 1
-                    return current._right
-                elif current._right is None:
+                    return current.right
+                elif current.right is None:
                     self._length -= 1
-                    return current._left
+                    return current.left
 
                 # general case => find a successor
                 successor = self.__get_successor(current)
-                current._key = successor._key
-                current._item = successor._item
-                current._right = delete_aux(current._right, successor._key)
+                current.key = successor.key
+                current.item = successor.item
+                current.right = delete_aux(current.right, successor.key)
 
             return current
 
@@ -287,14 +287,14 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
         def get_tree_node_by_key(current: BinaryNode[K, V], key: K) -> BinaryNode[K, V]:
             if current is None:  # base case: empty
                 raise KeyError(f'Key not found: {key}')
-            elif key == current._key:  # base case: found
+            elif key == current.key:  # base case: found
                 return current
-            elif key < current._key:
-                return get_tree_node_by_key(current._left, key)
+            elif key < current.key:
+                return get_tree_node_by_key(current.left, key)
             else:  # key > current.key
-                return get_tree_node_by_key(current._right, key)
+                return get_tree_node_by_key(current.right, key)
 
-        return get_tree_node_by_key(self._root, key)._item
+        return get_tree_node_by_key(self._root, key).item
 
     def __setitem__(self, key: K, item: V) -> None:
         def insert_aux(current: BinaryNode[K, V], key: K, item: V, current_depth: int) -> BinaryNode[K, V] | None:
@@ -309,12 +309,12 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
             if current is None:  # base case: at the leaf
                 current = BinaryNode(item, key, current_depth)
                 self._length += 1
-            elif key < current._key:
-                current._left = insert_aux(current._left, key, item, current_depth + 1)
-            elif key > current._key:
-                current._right = insert_aux(current._right, key, item, current_depth + 1)
+            elif key < current.key:
+                current.left = insert_aux(current.left, key, item, current_depth + 1)
+            elif key > current.key:
+                current.right = insert_aux(current.right, key, item, current_depth + 1)
             else:  # key == current.key
-                current._item = item
+                current.item = item
             return current
 
         self._root = insert_aux(self._root, key, item, 0)
@@ -328,7 +328,7 @@ class BinarySearchTree(AbstractBinarySearchTree[K,V]):
             prefix = "\n" + " " * indent * depth if indent > 0 else ""
             if current is None:
                 return prefix[:-indent] + str(None)
-            return f"{prefix[:-indent]}({prefix}{current._key}, {prefix}{current._item}, {str_aux(current._left, indent, depth + 1)}, {str_aux(current._right, indent, depth + 1)}{prefix[:-indent]})"
+            return f"{prefix[:-indent]}({prefix}{current.key}, {prefix}{current.item}, {str_aux(current.left, indent, depth + 1)}, {str_aux(current.right, indent, depth + 1)}{prefix[:-indent]})"
 
         if self._root is None:
             return f"<BinarySearchTree({self._root})>"

@@ -30,7 +30,7 @@ class LinkedQueue(Queue[T]):
         # Case 2: Non Empty queue
         # Add to the rear
         new_node = Node(item)
-        self._rear._link = new_node
+        self._rear.link = new_node
         self._rear = new_node
         self._length += 1
 
@@ -44,15 +44,15 @@ class LinkedQueue(Queue[T]):
 
         # Case 1: Single element in the queue
         if self._front == self._rear:
-            item = self._front._item
+            item = self._front.item
             self._front = None
             self._rear = None
             self._length -= 1
             return item
 
         # Case 2: Multiple elements in the queue
-        item = self._front._item
-        self._front = self._front._link
+        item = self._front.item
+        self._front = self._front.link
         self._length -= 1
         return item
 
@@ -62,7 +62,7 @@ class LinkedQueue(Queue[T]):
         """
         if self.is_empty():
             raise Exception("Queue is empty")
-        return self._front._item
+        return self._front.item
 
     def peek_node(self) -> Node:
         """ Returns the node at the queue's front without deleting it.
@@ -88,8 +88,8 @@ class LinkedQueue(Queue[T]):
         i = self._front
         result = "<LinkedQueue ["
         while i is not None:
-            result += str(i._item)
-            if i._link is not None:
+            result += str(i.item)
+            if i.link is not None:
                 result += ", "
-            i = i._link
+            i = i.link
         return f"{result}]>"

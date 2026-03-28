@@ -259,9 +259,9 @@ class TestLinkedHeap(TestCase):
         for i in range(num):
             lh.add(i)
             tree = lh._root
-            rank = tree._key
+            rank = tree.key
             for _ in range(rank):
-                tree = tree._right
+                tree = tree.right
             self.assertIsNone(tree)
         
         self.assertEqual(len(lh), num)
@@ -282,7 +282,7 @@ class TestLinkedHeap(TestCase):
         lh = MinLinkedHeap()
         for i in range(20, 0, -1):
             lh.add(i)
-            self.assertEqual(lh._root._key, 1)
+            self.assertEqual(lh._root.key, 1)
         
     def test_heapify(self):
         items = list(range(10))

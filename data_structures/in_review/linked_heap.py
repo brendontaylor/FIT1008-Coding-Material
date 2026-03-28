@@ -27,14 +27,14 @@ class MinLinkedHeap(AbstractHeap[T]):
 
     def extract_root(self):
         if self._root:
-            res = self._root._item
-            self._root = self.__merge(self._root._left, self._root._right)
+            res = self._root.item
+            self._root = self.__merge(self._root.left, self._root.right)
             return res
         raise ValueError("Cannot extract root from empty heap")
 
     def peek(self) -> T:
         if self._root:
-            return self._root._item
+            return self._root.item
         raise ValueError("Cannot peek from empty heap")
 
     def __merge(self, node1:MaybeNode, node2:MaybeNode) -> BinaryNode[int, T]:
@@ -59,21 +59,21 @@ class MinLinkedHeap(AbstractHeap[T]):
         def key(n:MaybeNode):
             if n is None:
                 return 0
-            return n._key
+            return n.key
         
-        size = node1._size + node2._size
+        size = node1.size + node2.size
 
-        if node1._item > node2._item: #This part determines the heap ordering, makes node1 a valid parent
+        if node1.item > node2.item: #This part determines the heap ordering, makes node1 a valid parent
             node1, node2 = node2, node1
 
-        node1._right = self.__merge(node1._right, node2)
+        node1.right = self.__merge(node1.right, node2)
 
-        if key(node1._right) > key(node1._left):
-            node1._left, node1._right = node1._right, node1._left
+        if key(node1.right) > key(node1.left):
+            node1.left, node1.right = node1.right, node1.left
 
-        node2 = BinaryNode(node1._item, key(node1._right) + 1, size)
-        node2._left = node1._left
-        node2._right = node1._right
+        node2 = BinaryNode(node1.item, key(node1.right) + 1, size)
+        node2.left = node1.left
+        node2.right = node1.right
 
         return node2
 
@@ -94,11 +94,11 @@ class MinLinkedHeap(AbstractHeap[T]):
         def size(node : MaybeNode) -> int:
             if node is None:
                 return 0
-            return node._size
+            return node.size
         
         def merge(new_node: BinaryNode[int, T]):
             tail = linked_stack
-            while tail and new_node._size >= size(tail[0]):
+            while tail and new_node.size >= size(tail[0]):
                 head, tail = tail
                 
                 new_node = res.__merge(new_node, head)
@@ -128,24 +128,24 @@ class MinLinkedHeap(AbstractHeap[T]):
             if node is None:
                 return i
             
-            res[i] = node._item
-            i = add(i + 1, node._left)
-            return add(i + 1, node._right)
+            res[i] = node.item
+            i = add(i + 1, node.left)
+            return add(i + 1, node.right)
         add(0, self.__root)
         return res
 
 
     def __len__(self) -> int:
         if self._root:
-            return self._root._size
+            return self._root.size
         return 0
 
     def __str__(self) -> str:
         def get_elements(node: BinaryNode[int, T], elements: ArrayR[T], index: int) -> None:
             if node is not None:
-                elements[index] = str(node._item)
-                get_elements(node._left, elements, index * 2 + 1)
-                get_elements(node._right, elements, index * 2 + 2)
+                elements[index] = str(node.item)
+                get_elements(node.left, elements, index * 2 + 1)
+                get_elements(node.right, elements, index * 2 + 2)
 
         elements = ArrayR(len(self))
         get_elements(self._root, elements, 0)

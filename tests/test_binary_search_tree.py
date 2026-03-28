@@ -6,11 +6,11 @@ def check_bst_invariant(node: BinaryNode | None, l=None, r=None) -> bool:
     if node is None:
         return True
     if not l is None:
-        if node._key < l: return False
+        if node.key < l: return False
     if not r is None:
-        if node._key > r: return False
-    return (check_bst_invariant(node._left, l, node._key) and
-            check_bst_invariant(node._right, node._key, r))
+        if node.key > r: return False
+    return (check_bst_invariant(node.left, l, node.key) and
+            check_bst_invariant(node.right, node.key, r))
 
 
 def double(iterator):
@@ -24,25 +24,25 @@ class TestBinarySearchTree(TestCase):
     def setUp(self):
         self._empty = BinarySearchTree()
         self._one = BinarySearchTree()
-        self._left_tree = BinarySearchTree()
-        self._right_tree = BinarySearchTree()
+        self.left_tree = BinarySearchTree()
+        self.right_tree = BinarySearchTree()
         self._balanced = BinarySearchTree()
         self._one[0] = 0
         balanced_items = [7, 3, 1, 0, 2, 5, 4, 6, 11, 9, 8, 10, 13, 12, 14]
         for i in range(self.NUM_ITEMS):
-            self._right_tree[i] = i
-            self._left_tree[self.NUM_ITEMS - i - 1] = self.NUM_ITEMS - i - 1
+            self.right_tree[i] = i
+            self.left_tree[self.NUM_ITEMS - i - 1] = self.NUM_ITEMS - i - 1
             self._balanced[balanced_items[i]] = balanced_items[i]
 
-        self._trees = [self._empty, self._one, self._left_tree, self._right_tree, self._balanced]
-        
+        self._trees = [self._empty, self._one, self.left_tree, self.right_tree, self._balanced]
+
         self._table = BinarySearchTree()
 
     def test_len(self):
         self.assertEqual(len(self._empty), 0)
         self.assertEqual(len(self._one), 1)
-        self.assertEqual(len(self._left_tree), 15)
-        self.assertEqual(len(self._right_tree), 15)
+        self.assertEqual(len(self.left_tree), 15)
+        self.assertEqual(len(self.right_tree), 15)
         self.assertEqual(len(self._balanced), 15)
 
     def test_setup_invariant(self):
@@ -50,14 +50,14 @@ class TestBinarySearchTree(TestCase):
             self.assertTrue(check_bst_invariant(tree._root))
 
         incorrect = BinaryNode(1, 1)
-        incorrect._right = BinaryNode(0, 0)
+        incorrect.right = BinaryNode(0, 0)
         self.assertFalse(check_bst_invariant(incorrect))
         incorrect = BinaryNode(1, 1)
-        incorrect._left = BinaryNode(2, 2)
+        incorrect.left = BinaryNode(2, 2)
         self.assertFalse(check_bst_invariant(incorrect))
         incorrect = BinaryNode(1, 1)
-        incorrect._left = BinaryNode(0, 0)
-        incorrect._left._right = BinaryNode(2, 2)
+        incorrect.left = BinaryNode(0, 0)
+        incorrect.left.right = BinaryNode(2, 2)
         self.assertFalse(check_bst_invariant(incorrect))
 
     def test_is_empty(self):
@@ -77,7 +77,7 @@ class TestBinarySearchTree(TestCase):
                 self.assertIn(i, tree)
 
         self.assertRaises(TypeError, lambda: "hi" in self._one)
-        self.assertRaises(TypeError, lambda: None in self._left_tree)
+        self.assertRaises(TypeError, lambda: None in self.left_tree)
 
     def test_inorder_iter(self):
         lists = [[x for x in tree] for tree in self._trees]
@@ -130,7 +130,7 @@ class TestBinarySearchTree(TestCase):
         self.assertTrue(self._table.is_empty())
         self.assertFalse("Key Two" in self._table)
     
-    def test_keys(self):
+    def testkeys(self):
         self._table["Key One"] = 1
         self._table["Key Two"] = 2
         self._table["Key Three"] = 3
@@ -170,8 +170,8 @@ class TestBinarySearchTree(TestCase):
         self.assertEqual(len(tree), 0)
 
         node = BinaryNode(1)
-        node._left = BinaryNode(2)
-        node._right = BinaryNode(3)
+        node.left = BinaryNode(2)
+        node.right = BinaryNode(3)
         
         tree = BinarySearchTree.from_node(node)
         self.assertEqual(len(tree), 3)
@@ -192,11 +192,11 @@ class TestBinarySearchTree(TestCase):
         one_str = str(self._one)
         self.assertEqual(one_str, "<BinarySearchTree(0, 0, None, None)>")
 
-        left_str = str(self._left_tree)
+        left_str = str(self.left_tree)
         self.assertEqual(left_str,
                          "<BinarySearchTree(14, 14, (13, 13, (12, 12, (11, 11, (10, 10, (9, 9, (8, 8, (7, 7, (6, 6, (5, 5, (4, 4, (3, 3, (2, 2, (1, 1, (0, 0, None, None), None), None), None), None), None), None), None), None), None), None), None), None), None), None)>")
 
-        right_str = str(self._right_tree)
+        right_str = str(self.right_tree)
         self.assertEqual(right_str,
                          "<BinarySearchTree(0, 0, None, (1, 1, None, (2, 2, None, (3, 3, None, (4, 4, None, (5, 5, None, (6, 6, None, (7, 7, None, (8, 8, None, (9, 9, None, (10, 10, None, (11, 11, None, (12, 12, None, (13, 13, None, (14, 14, None, None)))))))))))))))>")
 
@@ -249,7 +249,7 @@ class TestBinarySearchTree(TestCase):
     None
 )>""")
 
-        self.assertEqual(self._left_tree.str(indent=2),
+        self.assertEqual(self.left_tree.str(indent=2),
 """<BinarySearchTree
 (
   14, 
@@ -328,7 +328,7 @@ class TestBinarySearchTree(TestCase):
   None
 )>""")
 
-        self.assertEqual(self._right_tree.str(indent=2),
+        self.assertEqual(self.right_tree.str(indent=2),
 """<BinarySearchTree
 (
   0, 
