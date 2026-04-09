@@ -39,6 +39,7 @@ class ArraySortedList(SortedList[T]):
               number of items in the list.
         """
         item = self[index]
+        index = self._absolute_index(index)
         self.__shuffle_left(index)
         self._length -= 1
         return item
@@ -98,10 +99,9 @@ class ArraySortedList(SortedList[T]):
         """
         Find the position where the new item should be placed.
         :complexity: 
-            Best: O(Comp) happens when item is the middle element
-            Worst: O(Log N * comp) happens when item is the first or the last element
+            Best: O(1) happens when item is the middle element
+            Worst: O(Log N) happens when item is the first or the last element
             
-            Comp - cost of comparision - can be assumed O(1) for simple types like numbers
             N - length of the list
         """
 
@@ -132,10 +132,9 @@ class ArraySortedList(SortedList[T]):
         :raises IndexError: if the index is out of bounds.
         :complexity: O(1)
         """
-        if index < -1 * len(self) or index >= len(self):
+        index = self._absolute_index(index)
+        if index < 0 or index >= len(self):
             raise IndexError('Out of bounds access in list.')
-        if index < 0:
-            index = len(self) + index
         return self._array[index]
 
     def __str__(self) -> str:
