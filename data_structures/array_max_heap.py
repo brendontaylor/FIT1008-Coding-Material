@@ -59,7 +59,7 @@ class ArrayMaxHeap(AbstractHeap[T]):
     def is_full(self) -> bool:
         return len(self) == len(self._array) - 1
         
-    def __get_child_index(self, k:int) -> int | None:
+    def _get_child_index(self, k:int) -> int | None:
         """ Returns the index of child of k that would be the parent of the other (the larger child).
         :complexity: O(1)
         """
@@ -91,7 +91,7 @@ class ArrayMaxHeap(AbstractHeap[T]):
         """
         sinking_item = self._array[k]
         while 2 * k <= len(self):
-            child_i = self.__get_child_index(k)
+            child_i = self._get_child_index(k)
             if sinking_item >= self._array[child_i]:
                 break
             self._array[k] = self._array[child_i]
@@ -107,14 +107,14 @@ class ArrayMaxHeap(AbstractHeap[T]):
         :returns: A heap containing items in the iterable.
         :complexity: O(n) where n is the number of items in the iterable.
         """
-        try: #call len(iterable) to avoid having to resize a temporary array
+        try:  # call len(iterable) to avoid having to resize a temporary array
             length = len(items)
             array = ArrayR(max(min_capacity, length) + 1)
             for i, item in enumerate(items):
                 array[i + 1] = item
-            
 
-        except TypeError: #iterable doesn't have len(), iterate until exhaustion and resize as necessary.
+
+        except TypeError:  # iterable doesn't have len(), iterate until exhaustion and resize as necessary.
             def resize(array):
                 new_array = ArrayR(len(array) * 2)
                 for i in range(len(array)):
@@ -127,16 +127,16 @@ class ArrayMaxHeap(AbstractHeap[T]):
                 if i + 1 >= len(array):
                     array = resize(array)
                 array[i + 1] = item
-            
+
             length = i + 1
-        
-        heap = ArrayMaxHeap(length)
+
+        heap = cls(length)
         heap._array = array
         heap._length = length
 
         for i in range(len(heap) // 2, 0, -1):
             heap._sink(i)
-        
+
         return heap
     
     def values(self):
